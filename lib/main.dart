@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tutorialf/widget_example/dynamic_listview.dart';
+import 'package:tutorialf/widget/dynamic_listview.dart';
 
 void main() {
   runApp(MyApp());
@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(
+            ElevatedButton(
               onPressed: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context){return DynamicListView();})
