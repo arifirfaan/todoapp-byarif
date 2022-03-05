@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tutorialf/widget/dynamic_listview.dart';
+import 'package:tutorialf/widget/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,7 +27,10 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Scaffold(
+        appBar: AppBar(),
+        body: Home(),
+      ),
     );
   }
 }
@@ -44,25 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context){return DynamicListView();})
-                );
-              },
-              child: Text('Dynamic Listview'),
-            )
-          ],
-        ),
-      ),
-    );
+    return Home();
   }
 }
