@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tutorialf/screen/list_todo.dart';
+import 'package:todoapp/screen/list_todo.dart';
 
 class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tutorialf/model/todo.dart';
+import 'package:todoapp/model/sql_helper.dart';
+import 'package:todoapp/model/todo.dart';
+import 'package:todoapp/screen/create_list.dart';
 
 class ListTodo extends StatefulWidget {
 
-
-  ListTodo({Key key}) : super(key: key);
+  /// constructor
+  const ListTodo({Key? key}) : super(key: key);
 
   @override
   State<ListTodo> createState() => _ListTodoState();
@@ -13,61 +15,22 @@ class ListTodo extends StatefulWidget {
 
 class _ListTodoState extends State<ListTodo> {
 
-  List<Todo> _todoList = [];
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _contentController = TextEditingController();
   DateTime selectedDate = DateTime.now();
-  String _formattedDate = "";
+  late String _formattedDate = "";
+  // All journals
+  List<Map<String, dynamic>> _todoData = [];
 
   @override
   void initState(){
     super.initState();
+    _getList();
   }
 
-  void _onDialogCreateTodo(BuildContext context){
-    showDialog(context: context, builder: (BuildContext ctx){
-      return AlertDialog(
-        title: Text("Create Todo"),
-        content: Column(
-          children: [
-            Text("Title :"),
-            TextField(
-              controller: _titleController,
-            ),
-            Text("Content"),
-            TextField(
-              controller: _contentController,
-            ),
-            InkWell(
-              onTap: (){
-                _selectDate(context);
-              },
-              child: Text("Select Date"),
-            ),
-            Text(_formattedDate)
-          ],
-        ),
-        actions: [
-          ElevatedButton(onPressed: (){
-            setState(() {
-              _todoList.add(
-                Todo(
-                  id: "01",
-                  title: _titleController.text,
-                  content: _contentController.text,
-                  date: selectedDate
-                )
-              );
-            });
-            Navigator.pop(context);
-          }, child: Text("Save"))
-        ],
-      );
-    });
+  Future<void> _getList() async {
+    _todoData = await TodoCrud.refreshJournals();
   }
-
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(2015, 8),
@@ -78,7 +41,7 @@ class _ListTodoState extends State<ListTodo> {
     //     selectedDate = picked;
     //   });
     setState(() {
-      _formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(picked);
+      _formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(picked!);
       selectedDate = picked;
     });
 
@@ -91,16 +54,27 @@ class _ListTodoState extends State<ListTodo> {
         actions: [
           InkWell(
             onTap: (){
-              _onDialogCreateTodo(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (BuildContext context){
+                  return CreateList(
+                    onCallback: (String title, String desc, String date){
+                      setState(() {
+                        TodoCrud.addItem(title, desc, date);
+                      });
+                    }
+                  ,);
+                })
+              );
             },
-            child: Icon(Icons.create)
+            child: const Icon(Icons.ac_unit_sharp),
           )
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
-        child: _todoList.isEmpty ?
-          Center(
+        padding: const EdgeInsets.all(20),
+        child: _todoData.isEmpty ?
+          const Center(
             child: Expanded(
               child: Text(
                 "There is no list of todo, you can create a todo list by click the button at top right corner",
@@ -110,9 +84,24 @@ class _ListTodoState extends State<ListTodo> {
           )
           :
           ListView.builder(
-          itemCount: _todoList.length,
+          itemCount: _todoData.length,
           itemBuilder: (BuildContext context, int i){
-            return Text(_todoList[i].title);
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(i.toString()),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:10),
+                  child: Column(
+                    children: [
+                      Text(_todoData[i]['title'], style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),),
+                      Text(_todoData[i]['description'], style: const TextStyle(fontSize: 15),),
+                      Text(_todoData[i]['date'])
+                    ],
+                  ),
+                ),
+              ],
+            );
           }
         ),
       )
