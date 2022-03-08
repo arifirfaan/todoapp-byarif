@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tutorialf/widget/home.dart';
+import 'package:todoapp/widget/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,25 +28,12 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Image.asset("assets/logo_todo.png", fit: BoxFit.fitHeight, height: 30,),
+        ),
         body: Home(),
       ),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Home();
   }
 }
