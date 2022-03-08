@@ -28,7 +28,10 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Image.asset("assets/logo_todo.png", fit: BoxFit.fitHeight, height: 30,),
+        ),
         body: Home(),
       ),
     );

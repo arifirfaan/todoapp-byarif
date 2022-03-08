@@ -4,49 +4,45 @@ import 'package:todoapp/model/sql_helper.dart';
 
 class Todo{
 
-  final String id;
+  final int? id;
   final String title;
-  final String content;
+  final String description;
   final String date;
 
-  Todo({required this.id, required this.content, required this.title, required this.date});
+  Todo({this.id, required this.description, required this.title, required this.date});
 }
 
  class TodoCrud{
 
   TodoCrud._();
   // This function is used to fetch all data from the database
-  static Future<List<Map<String, dynamic>>> refreshJournals() async {
+  static Future<List<Map<String, dynamic>>> refreshTodos() async {
     final List<Map<String, dynamic>> data = await SQLHelper.getItems();
-    // setState(() {
-    //   _todoData = data;
-    //   _isLoading = false;
-    // });
     return data;
   }
 
 
-// Insert a new journal to the database
+// Insert a new todo to the database
   static Future<void> addItem(String title, String desc, String date) async {
     await SQLHelper.createItem(
     title, desc, date);
-    refreshJournals();
+    refreshTodos();
   }
 
-  // Update an existing journal
+  // Update an existing todo
   static Future<void> updateItem(int id, Todo data) async {
     await SQLHelper.updateItem(
-        id,data.title, data.content, data.date);
-    refreshJournals();
+      id,data.title, data.description, data.date);
+    refreshTodos();
   }
 
   // Delete an item
   static void deleteItem(int id, Todo data, BuildContext context) async {
     await SQLHelper.deleteItem(id);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Successfully deleted a journal!'),
+      content: Text('Successfully deleted a todo!'),
     ));
-    refreshJournals();
+    refreshTodos();
   }
 
 }
